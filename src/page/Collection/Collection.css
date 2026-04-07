@@ -1,0 +1,168 @@
+.collection {
+	min-height: 100vh;
+	padding: 48px clamp(16px, 4vw, 64px) 80px;
+	background: var(--bg);
+	display: grid;
+	gap: 28px;
+}
+
+.collection__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.collection__eyebrow {
+	margin: 0 0 4px;
+	text-transform: uppercase;
+	letter-spacing: 0.2em;
+	font-size: 0.72rem;
+	color: var(--muted);
+}
+
+.collection__title {
+	margin: 0 0 6px;
+	font-size: clamp(1.9rem, 4vw, 2.8rem);
+	color: var(--text);
+}
+
+.collection__subtitle {
+	margin: 0;
+	color: var(--muted);
+	max-width: 60ch;
+}
+
+.collection__actions {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.collection__count {
+	padding: 8px 14px;
+	border-radius: 999px;
+	background: rgba(59, 130, 246, 0.12);
+	color: var(--primary);
+	font-weight: 700;
+}
+
+.collection__clearBtn,
+.collection__browseBtn,
+.collection__linkBtn,
+.collection__removeBtn {
+	border: none;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.collection__clearBtn {
+	padding: 10px 16px;
+	border-radius: 999px;
+	background: #fff;
+	border: 1px solid var(--border);
+	color: var(--text);
+}
+
+.collection__clearBtn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.collection__empty {
+	padding: 48px 24px;
+	border-radius: 20px;
+	background: #ffffff;
+	border: 1px solid var(--border);
+	text-align: center;
+	display: grid;
+	gap: 12px;
+	place-items: center;
+}
+
+.collection__browseBtn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 12px 18px;
+	border-radius: 12px;
+	background: linear-gradient(135deg, var(--primary), var(--secondary));
+	color: #fff;
+	font-weight: 700;
+}
+
+.collection__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 24px;
+	align-items: stretch;
+}
+
+.collection__card {
+	min-height: 420px;
+}
+
+.collection__card--entering {
+	animation: collectionCardEnter 0.32s ease both;
+}
+
+.collection__card--removing {
+	animation: collectionCardExit 0.26s ease both;
+	pointer-events: none;
+}
+
+.collection__body {
+	padding-top: 14px;
+}
+
+.collection__links {
+	margin-top: 4px;
+}
+
+.collection__linkBtn {
+	min-width: 0;
+}
+
+.collection__linkBtn--soft {
+	background: rgba(245, 158, 11, 0.2);
+	color: #fde68a;
+	border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+@media (max-width: 720px) {
+	.collection__header {
+		flex-direction: column;
+	}
+
+	.collection__grid {
+		grid-template-columns: 1fr;
+	}
+
+	.collection__links {
+		flex-direction: column;
+	}
+}
+
+@keyframes collectionCardEnter {
+	from {
+		opacity: 0;
+		transform: translateY(14px) scale(0.98);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@keyframes collectionCardExit {
+	from {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+	to {
+		opacity: 0;
+		transform: translateY(-10px) scale(0.96);
+	}
+}

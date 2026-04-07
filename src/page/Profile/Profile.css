@@ -1,0 +1,432 @@
+/* ==========================================
+   PROFESSIONAL E-COMMERCE PROFILE PAGE
+   Theme-Aligned with Global Variables
+========================================== */
+
+/* ===============================
+   PAGE WRAPPER
+================================= */
+
+.profile-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(700px 420px at 10% 0%, rgba(59, 130, 246, 0.16), transparent 60%),
+    radial-gradient(700px 420px at 90% 10%, rgba(245, 158, 11, 0.14), transparent 60%),
+    var(--bg);
+  padding: 50px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+/* ===============================
+   SIDEBAR
+================================= */
+
+.profile-sidebar {
+  flex: 0 0 300px;
+  background: var(--panel);
+  padding: 35px 25px;
+  border-radius: var(--radius);
+  text-align: center;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 30px;
+  border: 1px solid var(--border);
+}
+
+.profile-pic {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: auto;
+  margin-bottom: 18px;
+  border: 3px solid rgba(59, 130, 246, 0.4);
+  transition: var(--transition);
+}
+
+.profile-pic:hover {
+  transform: scale(1.05);
+}
+
+.profile-sidebar h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--primary);
+  font-size: 0.8rem;
+  border-radius: 30px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.edit-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(30, 58, 138, 0.25);
+}
+
+.edit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.35);
+}
+
+/* ===============================
+   CONTENT AREA
+================================= */
+
+.profile-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* ===============================
+   CARD DESIGN
+================================= */
+
+.profile-card {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.86)),
+    var(--panel);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.10);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 48px rgba(17, 24, 39, 0.14);
+  border-color: rgba(59, 130, 246, 0.28);
+}
+
+.profile-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.10);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ===============================
+   INFO GRID
+================================= */
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 25px;
+}
+
+.info-grid div {
+  padding: 12px;
+  border-radius: 10px;
+  transition: var(--transition);
+}
+
+.info-grid div:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.info-grid label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+  font-weight: 500;
+}
+
+.info-grid p {
+  margin-top: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ===============================
+   ORDER SUMMARY
+================================= */
+
+.order-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.order-summary div {
+  flex: 1;
+  background: var(--bg);
+  padding: 20px;
+  border-radius: 14px;
+  text-align: center;
+  transition: var(--transition);
+  border: 1px solid var(--border);
+}
+
+.order-summary div:hover {
+  background: rgba(59, 130, 246, 0.12);
+  transform: translateY(-3px);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.order-summary h2 {
+  font-size: 1.9rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 6px;
+}
+
+.order-summary p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.profile-state {
+  margin: 0;
+  color: var(--muted);
+}
+
+.profile-state--error {
+  color: #b91c1c;
+}
+
+.past-orders {
+  display: grid;
+  gap: 16px;
+}
+
+.past-order-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.past-order-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.past-order-card__label {
+  margin: 0 0 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.past-order-card__head h4 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.past-order-card__total {
+  text-align: right;
+  display: grid;
+  gap: 4px;
+}
+
+.past-order-card__total span {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.past-order-card__total strong {
+  font-size: 18px;
+  color: var(--primary);
+}
+
+.past-order-card__items {
+  display: grid;
+  gap: 12px;
+}
+
+.past-order-item {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+}
+
+.past-order-item__thumb {
+  width: 84px;
+  height: 84px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at top, #eff6ff, #fde68a);
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.past-order-item__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.past-order-item__details h4 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+
+.past-order-item__details p {
+  margin: 0 0 10px;
+  color: var(--muted);
+}
+
+.past-order-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.profile-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.profile-product-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  background: #ffffff;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+}
+
+.profile-product-card__image {
+  width: 100%;
+  height: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at top, #eff6ff, #dbeafe);
+  color: var(--primary);
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.profile-product-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-product-card h4 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.profile-product-card p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.profile-product-card__info {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+/* ===============================
+   RESPONSIVE DESIGN
+================================= */
+
+@media (max-width: 950px) {
+  .profile-container {
+    flex-direction: column;
+  }
+
+  .profile-sidebar {
+    position: static;
+    width: 100%;
+  }
+
+  .order-summary {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 500px) {
+  .profile-page {
+    padding: 30px 15px;
+  }
+
+  .profile-card {
+    padding: 22px;
+  }
+
+  .profile-sidebar {
+    padding: 25px 20px;
+  }
+
+  .profile-pic {
+    width: 110px;
+    height: 110px;
+  }
+
+  .past-order-card__head,
+  .past-order-item,
+  .profile-product-card__info {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .past-order-card__total {
+    text-align: left;
+  }
+}

@@ -1,0 +1,122 @@
+export const products = [
+  {
+    id: 1,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=350&fit=crop",
+    name: "Wireless Bluetooth Headphones",
+    description: "Premium noise-cancelling headphones with 30hr battery life",
+    price: 1299,
+    discount: 35,
+    rating: 4.8,
+    reviews: 1247,
+    category: "Electronics",
+    category_id: 101
+  },
+  {
+    id: 2,
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=350&fit=crop",
+    name: "Cotton Casual T-Shirt",
+    description: "Premium combed cotton t-shirt - breathable & comfortable",
+    price: 499,
+    discount: 40,
+    rating: 4.9,
+    reviews: 2345,
+    category: "Clothing",
+    category_id: 102
+  },
+  {
+    id: 3,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=350&fit=crop",
+    name: "4K Smart TV 55 inch",
+    description: "Ultra HD 4K LED TV with Dolby Vision & Google Assistant",
+    price: 34999,
+    discount: 25,
+    rating: 4.7,
+    reviews: 567,
+    category: "Electronics",
+    category_id: 101
+  },
+  {
+    id: 4,
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=350&fit=crop",
+    name: "Premium Coffee Maker",
+    description: "Automatic espresso machine with 15 bar pressure",
+    price: 1599,
+    discount: 30,
+    rating: 4.8,
+    reviews: 789,
+    category: "Home & Kitchen",
+    category_id: 103
+  },
+  {
+    id: 5,
+    image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=350&fit=crop",
+    name: "Designer Sunglasses",
+    description: "UV protection polarized lenses with stylish frame",
+    price: 899,
+    discount: 20,
+    rating: 4.6,
+    reviews: 432,
+    category: "Fashion",
+    category_id: 104
+  },
+  {
+    id: 6,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=350&fit=crop",
+    name: "Portable Power Bank 20000mAh",
+    description: "Fast charging power bank with dual USB ports",
+    price: 799,
+    discount: 25,
+    rating: 4.7,
+    reviews: 1123,
+    category: "Electronics",
+    category_id: 101
+  },
+  {
+    id: 7,
+    image: "https://images.unsplash.com/photo-1542272604-787c62d465d1?w=400&h=350&fit=crop",
+    name: "Running Shoes Sport Edition",
+    description: "Lightweight mesh shoes with cushioned sole",
+    price: 1299,
+    discount: 35,
+    rating: 4.8,
+    reviews: 1876,
+    category: "Sportswear",
+    category_id: 105
+  },
+  {
+    id: 8,
+    image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=350&fit=crop",
+    name: "Stainless Steel Water Bottle",
+    description: "Double-wall insulated bottle keeps drinks hot/cold for 24 hours",
+    price: 599,
+    discount: 15,
+    rating: 4.9,
+    reviews: 2134,
+    category: "Lifestyle",
+    category_id: 106
+  },
+  {
+    id: 9,
+    image: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&h=350&fit=crop",
+    name: "Smartwatch Fitness Tracker",
+    description: "Heart rate monitor, step counter, sleep tracking & notifications",
+    price: 2299,
+    discount: 28,
+    rating: 4.7,
+    reviews: 1654,
+    category: "Electronics",
+    category_id: 101
+  },
+  {
+    id: 10,
+    image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=350&fit=crop",
+    name: "Yoga Mat Premium",
+    description: "Non-slip eco-friendly yoga mat with carrying strap",
+    price: 899,
+    discount: 22,
+    rating: 4.8,
+    reviews: 945,
+    category: "Fitness",
+    category_id: 107
+  }
+];
