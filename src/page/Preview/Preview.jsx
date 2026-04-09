@@ -5,6 +5,7 @@ import { API_BASE_URL } from '../../config'
 import { apiFetch } from '../../utils/api'
 import Pagination from '../../Component/Pagination'
 import { isInCollection, toggleCollectionItem } from '../../utils/collection'
+import { getStoredUser } from '../../utils/auth'
 
 const ITEMS_PER_PAGE = 12
 
@@ -18,10 +19,9 @@ const Preview = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user') || 'null')
-        const token = localStorage.getItem('token')
+        const user = getStoredUser()
 
-        if (!token || !user || user.role !== 'admin') {
+        if (!user || user.role !== 'admin') {
             navigate('/login')
             return
         }
@@ -29,7 +29,6 @@ const Preview = () => {
         const fetchProducts = async () => {
             try {
                 const data = await apiFetch(`${API_BASE_URL}/api/shop/read`, {
-                    headers: { Authorization: `Bearer ${token}` },
                     credentials: 'include'
                 })
                 setProducts(data.products || [])

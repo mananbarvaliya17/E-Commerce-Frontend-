@@ -3,6 +3,7 @@ import './DeleteProduct.css'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_BASE_URL } from '../config'
 import { apiFetch } from '../utils/api'
+import { getStoredUser } from '../utils/auth'
 
 const DeleteProduct = () => {
   const { id } = useParams()
@@ -13,10 +14,9 @@ const DeleteProduct = () => {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || 'null')
-    const token = localStorage.getItem('token')
+    const storedUser = getStoredUser()
 
-    if (!token || !user || user.role !== 'admin') {
+    if (!storedUser || storedUser.role !== 'admin') {
       navigate('/login')
       return
     }
@@ -24,7 +24,6 @@ const DeleteProduct = () => {
     const fetchProduct = async () => {
       try {
         const data = await apiFetch(`${API_BASE_URL}/api/shop/shop/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
           credentials: 'include'
         })
 
@@ -40,8 +39,8 @@ const DeleteProduct = () => {
   }, [id, navigate])
 
   const handleDelete = async () => {
-    const token = localStorage.getItem('token')
-    if (!token) {
+    const user = getStoredUser()
+    if (!user) {
       navigate('/login')
       return
     }
@@ -52,7 +51,6 @@ const DeleteProduct = () => {
     try {
       await apiFetch(`${API_BASE_URL}/api/shop/delete/${id}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
         credentials: 'include'
       })
 

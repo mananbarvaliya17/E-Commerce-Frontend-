@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import './Collection.css'
 import '../Home/Home.css'
 import { clearCollection, getCollectionItems, removeCollectionItem } from '../../utils/collection'
+import { getStoredUser } from '../../utils/auth'
 
 const Collection = () => {
   const navigate = useNavigate()
@@ -12,10 +13,9 @@ const Collection = () => {
   const cleanupTimers = React.useRef([])
 
   React.useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || 'null')
-    const token = localStorage.getItem('token')
+    const user = getStoredUser()
 
-    if (!token || !user) {
+    if (!user) {
       navigate('/login')
       return
     }

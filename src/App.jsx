@@ -1,51 +1,62 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import './App.css'
 import { Route, Routes } from 'react-router-dom'
-import Register from './page/Register/Register'
-import Login from './page/Login/Login'
-import Home from './page/Home/Home'
-import Profile from './page/Profile/Profile'
-import Cart from './page/Cart/Cart'
-import TotalUser from './page/TotalUser/TotalUser'
-import Logout from './Component/Logout'
 import Navbar from './Component/Navbar'
 import Footer from './Component/Footer'
-import AboutUs from './page/AboutUs/AboutUs'
-import CreateProduct from './page/CreateProduct/CreateProduct'
-import ProductDetails from './Component/ProductDetails'
-import UpdateProduct from './Component/UpdateProduct'
-import BuyNow from './Component/BuyNow'
-import Preview from './page/Preview/Preview'
-import DeleteProduct from './Component/DeleteProduct'
-import Collection from './page/Collection/Collection'
-import ProductOrder from './page/Order/ProductOrder'
-import ProductOrderCount from './Component/ProductOrderCount'
+import ProtectedRoute from './Component/ProtectedRoute'
+
+const Register = lazy(() => import('./page/Register/Register'))
+const Login = lazy(() => import('./page/Login/Login'))
+const Home = lazy(() => import('./page/Home/Home'))
+const Profile = lazy(() => import('./page/Profile/Profile'))
+const Cart = lazy(() => import('./page/Cart/Cart'))
+const TotalUser = lazy(() => import('./page/TotalUser/TotalUser'))
+const AboutUs = lazy(() => import('./page/AboutUs/AboutUs'))
+const CreateProduct = lazy(() => import('./page/CreateProduct/CreateProduct'))
+const ProductDetails = lazy(() => import('./Component/ProductDetails'))
+const UpdateProduct = lazy(() => import('./Component/UpdateProduct'))
+const BuyNow = lazy(() => import('./Component/BuyNow'))
+const Preview = lazy(() => import('./page/Preview/Preview'))
+const DeleteProduct = lazy(() => import('./Component/DeleteProduct'))
+const Collection = lazy(() => import('./page/Collection/Collection'))
+const ProductOrder = lazy(() => import('./page/Order/ProductOrder'))
+const ProductOrderCount = lazy(() => import('./Component/ProductOrderCount'))
+const Unauthorized = lazy(() => import('./page/Unauthorized/Unauthorized'))
+const NotFound = lazy(() => import('./page/NotFound/NotFound'))
+
+const LoadingScreen = () => <div className="app__loading">Loading...</div>
 
 const App = () => {
   return (
     <div className="app">
       <Navbar />
       <main className="app__main">
-        <Routes>
-          <Route path='/' element={<Register />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/logout' element={<Logout />} />
-          <Route path='/home' element={<Home />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/cart' element={<Cart />} />
-          <Route path='/user' element={<TotalUser />} />
-          <Route path='/aboutus' element={<AboutUs />} />
-          <Route path='/createproduct' element={<CreateProduct />} />
-          <Route path='/product/:id' element={<ProductDetails />} />
-          <Route path='/updateproduct/:id' element={<UpdateProduct />} />
-          <Route path='/deleteproduct/:id' element={<DeleteProduct />} />
-          <Route path='/BuyNow/:id' element={<BuyNow />} />
-          <Route path='/preview' element={<Preview />} />
-          <Route path='/collection' element={<Collection />} />
-          <Route path='/productorder' element={<ProductOrder />} />
-          <Route path='/productordercount/:userId' element={<ProductOrderCount />} />
-        </Routes>
+        <Suspense fallback={<LoadingScreen />}>
+          <Routes>
+            <Route path='/' element={<Register />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/unauthorized' element={<Unauthorized />} />
+            <Route path='/aboutus' element={<AboutUs />} />
+
+            <Route path='/home' element={<ProtectedRoute allowedRoles={['user', 'admin']}><Home /></ProtectedRoute>} />
+            <Route path='/profile' element={<ProtectedRoute allowedRoles={['user', 'admin']}><Profile /></ProtectedRoute>} />
+            <Route path='/cart' element={<ProtectedRoute allowedRoles={['user', 'admin']}><Cart /></ProtectedRoute>} />
+            <Route path='/collection' element={<ProtectedRoute allowedRoles={['user', 'admin']}><Collection /></ProtectedRoute>} />
+            <Route path='/product/:id' element={<ProtectedRoute allowedRoles={['user', 'admin']}><ProductDetails /></ProtectedRoute>} />
+            <Route path='/BuyNow/:id' element={<ProtectedRoute allowedRoles={['user', 'admin']}><BuyNow /></ProtectedRoute>} />
+
+            <Route path='/preview' element={<ProtectedRoute allowedRoles={['admin']}><Preview /></ProtectedRoute>} />
+            <Route path='/createproduct' element={<ProtectedRoute allowedRoles={['admin']}><CreateProduct /></ProtectedRoute>} />
+            <Route path='/user' element={<ProtectedRoute allowedRoles={['admin']}><TotalUser /></ProtectedRoute>} />
+            <Route path='/updateproduct/:id' element={<ProtectedRoute allowedRoles={['admin']}><UpdateProduct /></ProtectedRoute>} />
+            <Route path='/deleteproduct/:id' element={<ProtectedRoute allowedRoles={['admin']}><DeleteProduct /></ProtectedRoute>} />
+            <Route path='/productorder' element={<ProtectedRoute allowedRoles={['admin']}><ProductOrder /></ProtectedRoute>} />
+            <Route path='/productordercount/:userId' element={<ProtectedRoute allowedRoles={['admin']}><ProductOrderCount /></ProtectedRoute>} />
+
+            <Route path='*' element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </main>
       <Footer />
     </div>

@@ -3,6 +3,8 @@ import './TotalUser.css'
 import { API_BASE_URL } from '../../config'
 import { useNavigate } from 'react-router-dom'
 import { apiFetch } from '../../utils/api'
+import { getStoredUser } from '../../utils/auth'
+import Pagination from '../../Component/Pagination'
 
 const UsersIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -16,19 +18,25 @@ const TotalUser = () => {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
   const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const token = localStorage.getItem('token')
-      if (!token) { navigate('/login'); return }
+      const user = getStoredUser()
+      if (!user || user.role !== 'admin') { navigate('/login'); return }
+
+      setLoading(true)
+      setError('')
 
       try {
-        const data = await apiFetch(`${API_BASE_URL}/api/shop/total-user`, {
-          headers: { Authorization: `Bearer ${token}` },
+        const params = new URLSearchParams({ page: String(currentPage), limit: '8' })
+        const data = await apiFetch(`${API_BASE_URL}/api/shop/total-user?${params.toString()}`, {
           credentials: 'include',
         })
-        setUsers(data.totalUsers || [])
+        setUsers(data.users || [])
+        setTotalPages(Number(data.totalPages || 0))
       } catch (err) {
         setError(err.message || 'Failed to fetch users')
       } finally {
@@ -37,7 +45,11 @@ const TotalUser = () => {
     }
 
     fetchUsers()
-  }, [navigate])
+  }, [currentPage, navigate])
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+  }
 
   return (
     <section className="total-user">
@@ -94,6 +106,8 @@ const TotalUser = () => {
           </article>
         ))}
       </div>
+
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
     </section>
   )
 }

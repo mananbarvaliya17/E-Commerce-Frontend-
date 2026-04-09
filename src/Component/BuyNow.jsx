@@ -3,6 +3,7 @@ import './BuyNow.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 import { apiFetch } from '../utils/api';
+import { getStoredUser } from '../utils/auth';
 
 const BuyNow = () => {
     const { id } = useParams();
@@ -18,15 +19,14 @@ const BuyNow = () => {
 
     useEffect(() => {
         const fetchProduct = async () => {
-            const token = localStorage.getItem('token');
-            if (!token) {
+            const user = getStoredUser();
+            if (!user) {
                 navigate('/login');
                 return;
             }
 
             try {
                 const data = await apiFetch(`${API_BASE_URL}/api/shop/shop/${id}`, {
-                    headers: { Authorization: `Bearer ${token}` },
                     credentials: 'include'
                 });
 
@@ -56,9 +56,9 @@ const BuyNow = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token');
+        const user = getStoredUser();
 
-        if (!token) {
+        if (!user) {
             navigate('/login');
             return;
         }
@@ -71,7 +71,6 @@ const BuyNow = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
                 },
                 credentials: 'include',
                 body: JSON.stringify({

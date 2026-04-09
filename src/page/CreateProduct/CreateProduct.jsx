@@ -3,6 +3,7 @@ import './CreateProduct.css'
 import { API_BASE_URL } from '../../config'
 import { useNavigate } from 'react-router-dom'
 import { apiFetch } from '../../utils/api'
+import { getStoredUser } from '../../utils/auth'
 
 const CreateProduct = () => {
     const [formData, setFormData] = useState({
@@ -53,8 +54,8 @@ const CreateProduct = () => {
         setError('')
         setSuccess('')
 
-        const token = localStorage.getItem('token')
-        if (!token) {
+        const user = getStoredUser()
+        if (!user) {
             navigate('/login')
             return
         }
@@ -76,7 +77,6 @@ const CreateProduct = () => {
 
             await apiFetch(`${API_BASE_URL}/api/shop/create`, {
                 method: 'POST',
-                headers: { Authorization: `Bearer ${token}` },
                 credentials: 'include',
                 body: payload
             })

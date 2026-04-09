@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { API_BASE_URL } from '../config'
 import { apiFetch } from '../utils/api'
 import './ProductOrderCount.css'
+import { getStoredUser } from '../utils/auth'
+import Pagination from './Pagination'
 
 const formatCurrency = (value) => `$${Number(value || 0).toFixed(2)}`
 
@@ -12,13 +14,15 @@ const ProductOrderCount = () => {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+  const [analytics, setAnalytics] = useState({ totalOrders: 0, totalRevenue: 0, totalItems: 0 })
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const token = localStorage.getItem('token')
-      const user = JSON.parse(localStorage.getItem('user') || 'null')
+      const user = getStoredUser()
 
-      if (!token || !user) {
+      if (!user) {
         navigate('/login')
         return
       }
@@ -28,13 +32,18 @@ const ProductOrderCount = () => {
         return
       }
 
+      setLoading(true)
+      setError('')
+
       try {
-        const data = await apiFetch(`${API_BASE_URL}/api/shop/total-order`, {
-          headers: { Authorization: `Bearer ${token}` },
+        const params = new URLSearchParams({ userId, page: String(currentPage), limit: '8' })
+        const data = await apiFetch(`${API_BASE_URL}/api/shop/total-order?${params.toString()}`, {
           credentials: 'include'
         })
 
         setOrders(Array.isArray(data.orders) ? data.orders : [])
+        setAnalytics(data.analytics || { totalOrders: 0, totalRevenue: 0, totalItems: 0 })
+        setTotalPages(Number(data.totalPages || 0))
       } catch (err) {
         setError(err.message || 'Failed to fetch order details')
       } finally {
@@ -43,7 +52,7 @@ const ProductOrderCount = () => {
     }
 
     fetchOrders()
-  }, [navigate])
+  }, [currentPage, navigate, userId])
 
   const groupedOrders = useMemo(() => {
     const filteredOrders = userId
@@ -134,15 +143,15 @@ const ProductOrderCount = () => {
         </article>
         <article className="productOrderCount__statCard">
           <span>Total Orders</span>
-          <strong>{selectedSummary.totalOrders}</strong>
+          <strong>{analytics.totalOrders || selectedSummary.totalOrders}</strong>
         </article>
         <article className="productOrderCount__statCard">
           <span>Total Product Quantity</span>
-          <strong>{selectedSummary.totalItems}</strong>
+          <strong>{analytics.totalItems || selectedSummary.totalItems}</strong>
         </article>
         <article className="productOrderCount__statCard">
           <span>Total Revenue</span>
-          <strong>{formatCurrency(selectedSummary.totalAmount)}</strong>
+          <strong>{formatCurrency(analytics.totalRevenue || selectedSummary.totalAmount)}</strong>
         </article>
       </section>
 
@@ -211,6 +220,8 @@ const ProductOrderCount = () => {
           </div>
         </article>
       ))}
+
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
     </div>
   )
 }

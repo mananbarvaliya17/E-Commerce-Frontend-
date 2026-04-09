@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import './ProductOrder.css'
 import { API_BASE_URL } from '../../config'
 import { apiFetch } from '../../utils/api'
+import { getStoredUser } from '../../utils/auth'
+import Pagination from '../../Component/Pagination'
 
 const formatCurrency = (value) => `$${Number(value || 0).toFixed(2)}`
 
@@ -11,13 +13,16 @@ const ProductOrder = () => {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+  const [analytics, setAnalytics] = useState({ totalOrders: 0, totalRevenue: 0, totalItems: 0 })
+  const [userTotals, setUserTotals] = useState([])
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const token = localStorage.getItem('token')
-      const user = JSON.parse(localStorage.getItem('user') || 'null')
+      const user = getStoredUser()
 
-      if (!token || !user) {
+      if (!user) {
         navigate('/login')
         return
       }
@@ -27,13 +32,19 @@ const ProductOrder = () => {
         return
       }
 
+      setLoading(true)
+      setError('')
+
       try {
-        const data = await apiFetch(`${API_BASE_URL}/api/shop/total-order`, {
-          headers: { Authorization: `Bearer ${token}` },
+        const params = new URLSearchParams({ page: String(currentPage), limit: '8' })
+        const data = await apiFetch(`${API_BASE_URL}/api/shop/total-order?${params.toString()}`, {
           credentials: 'include'
         })
 
         setOrders(Array.isArray(data.orders) ? data.orders : [])
+        setAnalytics(data.analytics || { totalOrders: 0, totalRevenue: 0, totalItems: 0 })
+        setUserTotals(Array.isArray(data.userTotals) ? data.userTotals : [])
+        setTotalPages(Number(data.totalPages || 0))
       } catch (err) {
         setError(err.message || 'Failed to fetch orders')
       } finally {
@@ -42,7 +53,7 @@ const ProductOrder = () => {
     }
 
     fetchOrders()
-  }, [navigate])
+  }, [currentPage, navigate])
 
   const orderSummary = useMemo(() => orders.reduce((acc, order) => {
     acc.totalOrders += 1
@@ -54,34 +65,6 @@ const ProductOrder = () => {
     totalRevenue: 0,
     totalItems: 0
   }), [orders])
-
-  const userTotals = useMemo(() => {
-    const totalsMap = new Map()
-
-    orders.forEach((order) => {
-      const userId = order.user?._id || 'unknown'
-      const username = order.user?.username || 'Unknown user'
-      const email = order.user?.email || 'N/A'
-      const key = `${userId}-${email}`
-
-      const current = totalsMap.get(key) || {
-        userId,
-        username,
-        email,
-        ordersCount: 0,
-        totalAmount: 0,
-        totalItems: 0
-      }
-
-      current.ordersCount += 1
-      current.totalAmount += Number(order.totalPrice || 0)
-      current.totalItems += (order.items || []).reduce((sum, item) => sum + Number(item.quantity || 0), 0)
-
-      totalsMap.set(key, current)
-    })
-
-    return [...totalsMap.values()].sort((a, b) => b.totalAmount - a.totalAmount)
-  }, [orders])
 
   const handleUserClick = (userId) => {
     navigate(`/productordercount/${userId}`)
@@ -101,15 +84,15 @@ const ProductOrder = () => {
         <div className="productOrder__stats">
           <article className="productOrder__stat">
             <span>Total Orders</span>
-            <strong>{orderSummary.totalOrders}</strong>
+            <strong>{analytics.totalOrders || orderSummary.totalOrders}</strong>
           </article>
           <article className="productOrder__stat">
             <span>Total Revenue</span>
-            <strong>{formatCurrency(orderSummary.totalRevenue)}</strong>
+            <strong>{formatCurrency(analytics.totalRevenue || orderSummary.totalRevenue)}</strong>
           </article>
           <article className="productOrder__stat">
             <span>Total Items Sold</span>
-            <strong>{orderSummary.totalItems}</strong>
+            <strong>{analytics.totalItems || orderSummary.totalItems}</strong>
           </article>
           <article className="productOrder__stat">
             <span>Total Buying Users</span>
@@ -149,7 +132,7 @@ const ProductOrder = () => {
                       <strong>{formatCurrency(entry.totalAmount)}</strong>
                     </div>
                     <div>
-                      <span>Total Products Quantity </span>
+                      <span>Total Products Quantity</span>
                       <strong>{entry.totalItems}</strong>
                     </div>
                   </div>
@@ -157,6 +140,7 @@ const ProductOrder = () => {
               ))}
             </div>
           ) : null}
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
         </section>
       </div>
     </section>

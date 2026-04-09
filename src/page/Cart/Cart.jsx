@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { API_BASE_URL } from '../../config'
 import { apiFetch } from '../../utils/api'
 import Pagination from '../../Component/Pagination'
+import { getStoredUser } from '../../utils/auth'
 
 const ITEMS_PER_PAGE = 4
 
@@ -51,15 +52,14 @@ const Cart = () => {
   }, [currentPage, totalPages])
 
   const fetchCart = useCallback(async () => {
-    const token = localStorage.getItem('token')
-    if (!token) {
+    const user = getStoredUser()
+    if (!user) {
       navigate('/login')
       return
     }
 
     try {
       const data = await apiFetch(`${API_BASE_URL}/api/shop/cart`, {
-        headers: { Authorization: `Bearer ${token}` },
         credentials: 'include'
       })
 
@@ -77,8 +77,8 @@ const Cart = () => {
   }, [fetchCart])
 
   const updateQuantity = async (productId, quantity) => {
-    const token = localStorage.getItem('token')
-    if (!token) {
+    const user = getStoredUser()
+    if (!user) {
       navigate('/login')
       return
     }
@@ -87,8 +87,7 @@ const Cart = () => {
       const data = await apiFetch(`${API_BASE_URL}/api/shop/cart/${productId}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         credentials: 'include',
         body: JSON.stringify({ quantity })
@@ -102,8 +101,8 @@ const Cart = () => {
   }
 
   const removeItem = async (productId) => {
-    const token = localStorage.getItem('token')
-    if (!token) {
+    const user = getStoredUser()
+    if (!user) {
       navigate('/login')
       return
     }
@@ -111,7 +110,6 @@ const Cart = () => {
     try {
       const data = await apiFetch(`${API_BASE_URL}/api/shop/cart/${productId}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
         credentials: 'include'
       })
 
@@ -123,8 +121,8 @@ const Cart = () => {
   }
 
   const handleCheckout = async () => {
-    const token = localStorage.getItem('token')
-    if (!token) {
+    const user = getStoredUser()
+    if (!user) {
       navigate('/login')
       return
     }
@@ -146,8 +144,7 @@ const Cart = () => {
       await apiFetch(`${API_BASE_URL}/api/shop/order`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         credentials: 'include',
         body: JSON.stringify({
@@ -163,7 +160,6 @@ const Cart = () => {
 
       await apiFetch(`${API_BASE_URL}/api/shop/cart`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
         credentials: 'include'
       })
 

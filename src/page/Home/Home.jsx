@@ -5,6 +5,7 @@ import { API_BASE_URL } from '../../config'
 import { apiFetch } from '../../utils/api'
 import Pagination from '../../Component/Pagination'
 import { isInCollection, toggleCollectionItem } from '../../utils/collection'
+import { getStoredUser } from '../../utils/auth'
 
 const ITEMS_PER_PAGE = 12
 
@@ -23,8 +24,8 @@ const Home = () => {
     const navigate = useNavigate()
 
     const fetchProducts = useCallback(async () => {
-        const token = localStorage.getItem('token')
-        if (!token) {
+        const user = getStoredUser()
+        if (!user) {
             navigate('/login')
             return
         }
@@ -45,7 +46,6 @@ const Home = () => {
             }
 
             const data = await apiFetch(`${API_BASE_URL}/api/shop/shop?${params.toString()}`, {
-                headers: { Authorization: `Bearer ${token}` },
                 credentials: 'include',
             })
             setProducts(data.products || [])
@@ -74,15 +74,14 @@ const Home = () => {
     }
 
     const handleAddToCart = async (productId) => {
-        const token = localStorage.getItem('token')
-        if (!token) {
+        const user = getStoredUser()
+        if (!user) {
             navigate('/login')
             return
         }
         try {
             await apiFetch(`${API_BASE_URL}/api/shop/shop/${productId}/product`, {
                 method: 'POST',
-                headers: { Authorization: `Bearer ${token}` },
                 credentials: 'include',
             })
             alert('Product added to cart')
@@ -97,8 +96,8 @@ const Home = () => {
     }
 
     const handleToggleCollection = (product) => {
-        const token = localStorage.getItem('token')
-        if (!token) {
+        const user = getStoredUser()
+        if (!user) {
             navigate('/login')
             return
         }

@@ -3,21 +3,18 @@ import { Link, useNavigate } from 'react-router-dom'
 import './Navbar.css'
 import Logout from './Logout'
 import { API_BASE_URL } from '../config'
+import { apiFetch } from '../utils/api'
+import { clearStoredAuth, getStoredUser } from '../utils/auth'
+import { useAuth } from '../context/AuthContext'
 
 const Navbar = () => {
     const [showLogoutModal, setShowLogoutModal] = useState(false)
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const navigate = useNavigate()
+    const { user: authUser, setUser } = useAuth()
 
-    const storedUser = localStorage.getItem('user')
-    let user = null
-    if (storedUser) {
-        try {
-            user = JSON.parse(storedUser)
-        } catch {
-            localStorage.removeItem('user')
-        }
-    }
+    const storedUser = getStoredUser()
+    const user = authUser || storedUser
 
     const handleLogoutClick = () => {
         setShowLogoutModal(true)
@@ -32,19 +29,17 @@ const Navbar = () => {
     }
 
     const handleConfirmLogout = async () => {
-        const token = localStorage.getItem('token')
         try {
-            await fetch(`${API_BASE_URL}/api/auth/logout`, {
+            await apiFetch(`${API_BASE_URL}/api/auth/logout`, {
                 method: 'POST',
-                headers: token ? { Authorization: `Bearer ${token}` } : {},
                 credentials: 'include'
             })
         } catch {
             // Continue logout flow even if API request fails.
         }
 
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
+        clearStoredAuth()
+        setUser(null)
         setShowLogoutModal(false)
         setMobileMenuOpen(false)
         navigate('/login')

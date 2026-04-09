@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import "./ProductDetails.css";
 import { API_BASE_URL } from '../config';
 import { apiFetch } from '../utils/api';
+import { getStoredUser } from '../utils/auth';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -14,19 +15,17 @@ const ProductDetails = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const token = localStorage.getItem('token');
-      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      const user = getStoredUser();
 
       setIsAdmin(user?.role === 'admin');
 
-      if (!token) {
+      if (!user) {
         navigate('/login');
         return;
       }
 
       try {
         const data = await apiFetch(`${API_BASE_URL}/api/shop/shop/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
           credentials: 'include'
         });
 
@@ -42,8 +41,8 @@ const ProductDetails = () => {
   }, [id, navigate]);
 
   const handleAddToCart = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const user = getStoredUser();
+    if (!user) {
       navigate('/login');
       return;
     }
@@ -51,7 +50,6 @@ const ProductDetails = () => {
     try {
       await apiFetch(`${API_BASE_URL}/api/shop/shop/${id}/product`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
         credentials: 'include'
       });
 

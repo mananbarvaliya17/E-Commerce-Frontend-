@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import './Register.css'
 import { API_BASE_URL } from '../../config';
 import { apiFetch } from '../../utils/api';
+import { useAuth } from '../../context/AuthContext';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ function Register() {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { loginUser } = useAuth();
 
   const validate = () => {
     if (!formData.username.trim()) return 'Username is required';
@@ -70,16 +72,18 @@ function Register() {
         payload.append('userimage', formData.userimage);
       }
 
-      await apiFetch(`${API_BASE_URL}/api/auth/register`, {
+      const data = await apiFetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         body: payload,
         credentials: 'include'
       });
 
-      setSuccess('Account created! Redirecting to login...');
-      // Always redirect to login page after registration
-      // Users need to log in separately to authenticate
-      setTimeout(() => navigate('/login'), 1500);
+      const createdUser = data.user;
+      if (createdUser) {
+        loginUser(createdUser);
+      }
+      setSuccess('Account created! Redirecting...');
+      setTimeout(() => navigate(createdUser?.role === 'admin' ? '/preview' : '/home'), 1000);
     } catch (err) {
       setError(err.message || 'Registration failed');
     } finally {

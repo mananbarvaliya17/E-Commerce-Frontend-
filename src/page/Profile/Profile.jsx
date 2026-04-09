@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 import { API_BASE_URL } from '../../config';
 import { apiFetch } from '../../utils/api';
+import { getStoredUser } from '../../utils/auth';
 
 const formatCurrency = (value) => `$${Number(value || 0).toFixed(2)}`;
 
@@ -17,21 +18,19 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
+      const userSession = getStoredUser();
+      if (!userSession) {
         navigate('/login');
         return;
       }
 
       try {
         const data = await apiFetch(`${API_BASE_URL}/api/auth/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
           credentials: 'include'
         });
 
         setUser(data.user);
       } catch {
-        localStorage.removeItem('token');
         localStorage.removeItem('user');
         navigate('/login');
       } finally {
@@ -44,16 +43,15 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchMyOrders = async () => {
-      const token = localStorage.getItem('token');
+      const userSession = getStoredUser();
 
-      if (!token) {
+      if (!userSession) {
         setOrderLoading(false);
         return;
       }
 
       try {
         const data = await apiFetch(`${API_BASE_URL}/api/shop/my-orders`, {
-          headers: { Authorization: `Bearer ${token}` },
           credentials: 'include'
         });
 

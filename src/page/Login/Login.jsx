@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { API_BASE_URL } from '../../config';
 import { apiFetch } from '../../utils/api';
+import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
     const [userType, setUserType] = useState('email');
@@ -11,6 +12,7 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { loginUser } = useAuth();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -41,8 +43,8 @@ const Login = () => {
                 return;
             }
 
-            localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
+            loginUser(data.user);
             // Redirect based on user role
             const redirectTo = data.user?.role === 'admin' ? '/preview' : '/home';
             navigate(redirectTo);
